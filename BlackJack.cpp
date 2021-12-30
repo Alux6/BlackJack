@@ -4,17 +4,23 @@
 
 using namespace std;
 
+
 class Carta{
 	private:
 		int valor;
 		int cantidad;
+		string Nombre;
 	public:
 		Carta(){
 		}
-		Carta(int Valor){
+		Carta(int Valor, string nombre){
 			valor = Valor;
+			Nombre = nombre;
 		}
 
+		string getNombre(){
+			return Nombre;
+		}
 		int getValor(){
 			return valor;
 		}
@@ -32,17 +38,21 @@ class Jugador{
 		int victorias;
 		int valorTotal;
 		bool jugando;
-		bool banca;
+		bool ganador;
+		string Nombre;
 	public:
 		Jugador(){
 			victorias = 0;
 		}
-		Jugador(bool banca){
-			banca = true;
-			victorias = 0;
+		void setNombre(string nombre){
+			Nombre = nombre;
+		}
+		string getNombre(){
+			return Nombre;
 		}
 		int getValor(){
 			return valorTotal;
+			cout << valorTotal;
 		}
 		int getVictorias(){
 			return victorias;
@@ -50,8 +60,15 @@ class Jugador{
 		bool getJugando(){
 			return jugando;
 		}
+		bool getGanador(){
+			return ganador;
+		}
 
+		void ganar(){
+			ganador = true;
+		}
 		void jugar(){
+			ganador = false;
 			jugando = true;
 			valorTotal = 0;
 		}
@@ -60,6 +77,9 @@ class Jugador{
 		}
 		void sumarValor(int valor){
 			valorTotal += valor;
+			if(valorTotal > 21){
+				terminarRonda();
+			}
 		}
 		void sumarVictoria(){
 			victorias++;
@@ -73,7 +93,7 @@ class Baraja{
 		int tamUtil;
 	public:
 		Baraja(){
-			Carta As(11), K(10), Q(10), J(10);
+			Carta As(11,"As"), K(10,"K"), Q(10,"Q"), J(10,"J");
 			barajaDeCartas[0] = J;
 			barajaDeCartas[1] = Q;
 			barajaDeCartas[2] = K;
@@ -117,22 +137,86 @@ class Juego{
 		Jugador listaDeJugadores[TAM];
 	public:
 		Juego(){
-			numeroJugadores = 2;
 		}
 		Juego(int numJugadores){
-			numeroJugadores = numJugadores;
 		}
 
+		Jugador getJugador(int indice){
+			return listaDeJugadores[indice];
+		}
+		int getNumeroJugadores(){
+			return numeroJugadores;
+		}
+		bool getTerminado(){
+			return terminado;
+		}
+		void Terminar(){
+			terminado = true;
+		}
+
+		void eliminarJugador(int indice){
+			for (int i = indice; i < numeroJugadores; i++){
+				listaDeJugadores[i] = listaDeJugadores[i + 1];
+			}
+			numeroJugadores--;
+		}
+		void iniciarRonda(){
+			terminado = false;
+			for (int i = 0; i < numeroJugadores; i++){
+				listaDeJugadores[i].jugar();
+			}
+		}
 		void decirPuntuacion(int indice){
-			cout << "Tienes: " << listaDeJugadores[indice].getValor() << " Puntos.";
+			cout << listaDeJugadores[indice].getNombre() <<
+				", tienes: " << listaDeJugadores[indice].getValor() << " Puntos.\n";
+		}
+		void elegirGanador(){
+			int mayor = 0;
+			for(int i = 0; i < numeroJugadores; i++){
+				int valorJugador = listaDeJugadores[i].getValor();
+				if(valorJugador <= 21){
+					if(i == 0){
+						mayor = valorJugador;
+					}
+					else if(listaDeJugadores[i].getValor() > mayor){
+						mayor = valorJugador;
+					}
+				}
+			}
+			for(int i = 0; i < numeroJugadores; i++){
+				int valorJugador = listaDeJugadores[i].getValor();
+				if(valorJugador == mayor){
+					listaDeJugadores[i].ganar();
+				}
+			}
+		}
+		void definirJugadores(){
+			int numJugadores;
+			Jugador a, b, c, d, e, f, g, h, i, j;
+			Jugador listaJug[TAM] = {a, b, c, d, e, f, g, h, i, j};
+			do{
+			cout << "Introduzca el número de jugadores que van a participar (Máximo 10, Minimo 2):\n";
+			cin >> numJugadores;
+			}while(numJugadores < 2 || numJugadores > 10);
+			numeroJugadores = numJugadores;
+			for(int i = 0; i < numJugadores; i++){
+				listaDeJugadores[i] = listaJug[i];
+			}
+			for(int i = 0; i < numeroJugadores; i++){
+				string nombre;
+				cout << "Introduzca el nombre del jugador " << i + 1 << endl;
+				cin >> nombre;
+				listaDeJugadores[i].setNombre(nombre);
+			}
 		}
 
 		bool continuar(int indice){
 			int decision = 0;
-			decirPuntuacion(indice);
 			do{
-				cout << "Desea seguir jugando?\n 1) Si.\n 2) No.";
-			}while(decision != 1 || decision != 2);
+				decirPuntuacion(indice);
+				cout << "Desea coger más cartas?\n 1) Si.\n 2) No.\n";
+				cin >> decision;
+			}while(decision < 1 || decision > 2);
 			if(decision == 1){
 				return true;
 			}
@@ -141,26 +225,78 @@ class Juego{
 			}
 		}
 
+		int numeroDeGanadores(){
+			int Ganadores = 0;
+			for (int i = 0; i < numeroJugadores; i++){
+				if(listaDeJugadores[i].getGanador()){
+					Ganadores++;
+				}
+			}
+			return Ganadores;
+		}
+
+		void devolverGanadores(){
+			elegirGanador();
+			int numGanadores = numeroDeGanadores();
+			if(numGanadores == 0){
+				cout << "No ha ganado nadie.";
+			}
+			else if (numGanadores == 1){
+				cout << "El ganador es: \n";
+			}
+			else{
+				cout << "Los ganadores son: \n";
+			}
+			for (int i = 0; i < numeroJugadores; i++){
+				if(listaDeJugadores[i].getGanador()){
+					cout << listaDeJugadores[i].getNombre() << endl;
+				}
+			}
+		}
+
 		int sacarCarta(){
-			int carta = rand() % baraja.getUtilizadas();
+			srand((unsigned) time(0));
+			int carta = (rand() % baraja.getUtilizadas());
 			return carta;
 		}
 
-		void jugada(int i){
+		bool jugada(int i){
 			if(listaDeJugadores[i].getJugando()){
 				if(continuar(i)){
 					int carta = sacarCarta();
 					int valorCarta = baraja.getCarta(carta).getValor();
+					baraja.cartaUsada(carta);
 					listaDeJugadores[i].sumarValor(valorCarta);
+					cout << "Ha salido un " << baraja.getCarta(carta).getNombre()
+						<< ", por lo que te sumas " << baraja.getCarta(carta).getValor() << " puntos.\n";
 				}
 				else{
 					listaDeJugadores[i].terminarRonda();
 				}
-
+				return true;
 			}
-
+			else{
+				return false;
+			}
 		}
 };
 int main(){
 
+	Juego juego;
+	juego.definirJugadores();
+	juego.iniciarRonda();
+	while(!juego.getTerminado()){
+		int jugadas = 0;
+		bool jugando = false;
+		for (int i = 0; i < juego.getNumeroJugadores(); i++){
+			jugando = juego.jugada(i);
+			if(jugando){
+				jugadas++;
+			}
+		}
+		if(jugadas == 0){
+			juego.Terminar();
+		}
+	}
+	juego.devolverGanadores();
 }
