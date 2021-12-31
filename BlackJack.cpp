@@ -4,7 +4,6 @@
 
 using namespace std;
 
-
 class Carta{
 	private:
 		int valor;
@@ -52,7 +51,6 @@ class Jugador{
 		}
 		int getValor(){
 			return valorTotal;
-			cout << valorTotal;
 		}
 		int getVictorias(){
 			return victorias;
@@ -77,7 +75,7 @@ class Jugador{
 		}
 		void sumarValor(int valor){
 			valorTotal += valor;
-			if(valorTotal > 21){
+			if(valorTotal >= 21){
 				terminarRonda();
 			}
 		}
@@ -88,17 +86,27 @@ class Jugador{
 
 class Baraja{
 	private:
-		static const int TAM = 4;
+		static const int TAM = 12;
 		Carta barajaDeCartas[TAM];
 		int tamUtil;
 	public:
 		Baraja(){
-			Carta As(11,"As"), K(10,"K"), Q(10,"Q"), J(10,"J");
-			barajaDeCartas[0] = J;
-			barajaDeCartas[1] = Q;
-			barajaDeCartas[2] = K;
-			barajaDeCartas[3] = As;
-			tamUtil = 4;
+			Carta As(11,"As"), K(10,"K"), Q(10,"Q"), J(10,"J"), Nueve(9,"Nueve"), Ocho(8,"Ocho"),
+					Siete(7,"Siete"), Seis(6,"Seis"), Cinco(5,"Cinco"), Cuatro(4,"Cuatro"),
+					Tres(3,"Tres"), Dos(2,"Dos");
+			barajaDeCartas[0] = As;
+			barajaDeCartas[1] = J;
+			barajaDeCartas[2] = Q;
+			barajaDeCartas[3] = K;
+			barajaDeCartas[4] = Nueve;
+			barajaDeCartas[5] = Ocho;
+			barajaDeCartas[6] = Siete;
+			barajaDeCartas[7] = Seis;
+			barajaDeCartas[8] = Cinco;
+			barajaDeCartas[9] = Cuatro;
+			barajaDeCartas[10] = Tres;
+			barajaDeCartas[11] = Dos;
+			tamUtil = 12;
 		}
 
 		Carta getCarta(int indice){
@@ -138,8 +146,6 @@ class Juego{
 	public:
 		Juego(){
 		}
-		Juego(int numJugadores){
-		}
 
 		Jugador getJugador(int indice){
 			return listaDeJugadores[indice];
@@ -154,6 +160,7 @@ class Juego{
 			terminado = true;
 		}
 
+		// Comprobar para eliminar.
 		void eliminarJugador(int indice){
 			for (int i = indice; i < numeroJugadores; i++){
 				listaDeJugadores[i] = listaDeJugadores[i + 1];
@@ -250,12 +257,12 @@ class Juego{
 			for (int i = 0; i < numeroJugadores; i++){
 				if(listaDeJugadores[i].getGanador()){
 					cout << listaDeJugadores[i].getNombre() << endl;
+					listaDeJugadores[i].sumarVictoria();
 				}
 			}
 		}
 
 		int sacarCarta(){
-			srand((unsigned) time(0));
 			int carta = (rand() % baraja.getUtilizadas());
 			return carta;
 		}
@@ -266,9 +273,12 @@ class Juego{
 					int carta = sacarCarta();
 					int valorCarta = baraja.getCarta(carta).getValor();
 					baraja.cartaUsada(carta);
+					if(valorCarta == 11 && listaDeJugadores[i].getValor() + 11 > 21){
+						valorCarta = 1;
+					}
 					listaDeJugadores[i].sumarValor(valorCarta);
 					cout << "Ha salido un " << baraja.getCarta(carta).getNombre()
-						<< ", por lo que te sumas " << baraja.getCarta(carta).getValor() << " puntos.\n";
+						<< ", por lo que te sumas " << valorCarta << " puntos.\n\n";
 				}
 				else{
 					listaDeJugadores[i].terminarRonda();
@@ -281,22 +291,43 @@ class Juego{
 		}
 };
 int main(){
-
+	srand((unsigned) time(0));
 	Juego juego;
 	juego.definirJugadores();
 	juego.iniciarRonda();
-	while(!juego.getTerminado()){
-		int jugadas = 0;
-		bool jugando = false;
-		for (int i = 0; i < juego.getNumeroJugadores(); i++){
-			jugando = juego.jugada(i);
-			if(jugando){
-				jugadas++;
+	bool terminar = false;
+	while(!terminar){
+		for (int j = 0; j < 100; j++){
+			cout << endl;
+		}
+		for(int i = 0; i < juego.getNumeroJugadores(); i++){
+				cout << juego.getJugador(i).getNombre() << ": " <<
+				juego.getJugador(i).getVictorias() << " Victorias.\n";
+		}
+		while(!juego.getTerminado()){
+			int jugadas = 0;
+			bool jugando = false;
+			for (int i = 0; i < juego.getNumeroJugadores(); i++){
+				jugando = juego.jugada(i);
+				if(jugando){
+					jugadas++;
+				}
+			}
+			if(jugadas == 0){
+				juego.Terminar();
 			}
 		}
-		if(jugadas == 0){
-			juego.Terminar();
+		juego.devolverGanadores();
+		int aux = 0;
+		do{
+			cout << "\nTerminar el juego?\n 1) Si. \n 2) No.\n";
+			cin >> aux;
+		}while(aux < 1 || aux > 2);
+		if (aux == 1){
+			terminar = true;
+		}
+		else{
+			juego.iniciarRonda();
 		}
 	}
-	juego.devolverGanadores();
 }
