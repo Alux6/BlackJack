@@ -8,4 +8,5 @@ Por ahora esta en una version bastante temprana, me quedan algunas cosas por hac
 
 - [x] Hacer que funcione el juego.
 - [ ] Añadir a la banca.
+- [ ] Hacer que se parezca mas al juego original.
 - [ ] Añadir una interfaz.

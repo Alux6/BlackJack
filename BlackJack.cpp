@@ -174,8 +174,13 @@ class Juego{
 			}
 		}
 		void decirPuntuacion(int indice){
-			cout << listaDeJugadores[indice].getNombre() <<
-				", tienes: " << listaDeJugadores[indice].getValor() << " Puntos.\n";
+			if(listaDeJugadores[indice].getNombre() == "Banca"){
+				cout << "La Banca tiene: " << listaDeJugadores[indice].getValor() << " Puntos\n";
+			}
+			else{
+				cout << listaDeJugadores[indice].getNombre() <<
+					", tienes: " << listaDeJugadores[indice].getValor() << " Puntos.\n";
+			}
 		}
 		void elegirGanador(){
 			int mayor = 0;
@@ -197,9 +202,27 @@ class Juego{
 				}
 			}
 		}
+		int decisionBanca(){
+			int suma = 0, valorMedioCartas, decision = 0;
+
+			for(int i = 0; i < baraja.getUtilizadas(); i++){
+				suma += baraja.getCarta(i).getValor();
+			}
+			valorMedioCartas = suma / baraja.getUtilizadas();
+			if(listaDeJugadores[numeroJugadores - 1].getValor() + valorMedioCartas < 21){
+				decision = 1;
+				cout << "La banca ha cogido otra carta\n";
+			}
+			else{
+				decision = 2;
+				cout << "La banca se retira.\n";
+			}
+			return decision;
+		}
+
 		void definirJugadores(){
 			int numJugadores;
-			Jugador a, b, c, d, e, f, g, h, i, j;
+			Jugador a, b, c, d, e, f, g, h, i, j, banca;
 			Jugador listaJug[TAM] = {a, b, c, d, e, f, g, h, i, j};
 			do{
 			cout << "Introduzca el número de jugadores que van a participar (Máximo 10, Minimo 2):\n";
@@ -215,15 +238,24 @@ class Juego{
 				cin >> nombre;
 				listaDeJugadores[i].setNombre(nombre);
 			}
+			banca.setNombre("Banca");
+			listaDeJugadores[numeroJugadores] = banca;
+			numeroJugadores++;
 		}
 
 		bool continuar(int indice){
 			int decision = 0;
-			do{
+			if(listaDeJugadores[indice].getNombre() != "Banca"){
+				do{
+					decirPuntuacion(indice);
+					cout << "Desea coger más cartas?\n 1) Si.\n 2) No.\n";
+					cin >> decision;
+				}while(decision < 1 || decision > 2);
+			}
+			else{
 				decirPuntuacion(indice);
-				cout << "Desea coger más cartas?\n 1) Si.\n 2) No.\n";
-				cin >> decision;
-			}while(decision < 1 || decision > 2);
+				decision = decisionBanca();
+			}
 			if(decision == 1){
 				return true;
 			}
