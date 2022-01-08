@@ -3,22 +3,23 @@
 
 Carta::Carta(){
 }
+
 Carta::Carta(int Valor, std::string nombre){
 	valor = Valor;
 	NombreCarta = nombre;
 	cantidad = 4;
 }
 
-std::string Carta::getNombre(){
-	return NombreCarta;
+int Carta::getCantidad(){
+	return cantidad;
 }
 
 int Carta::getValor(){
 	return valor;
 }
 
-int Carta::getCantidad(){
-	return cantidad;
+std::string Carta::getNombre(){
+	return NombreCarta;
 }
 
 void Carta::usarCarta(){

@@ -17,14 +17,24 @@ bool Juego::getTerminado(){
 	return terminado;
 }
 
-void Juego::Terminar(){
-	terminado = true;
-}
-
-void Juego::iniciarRonda(){
-	terminado = false;
-	for (int i = 0; i < numeroJugadores; i++){
-		listaDeJugadores[i].jugar();
+bool Juego::continuar(int indice){
+	int decision = 0;
+	if(listaDeJugadores[indice].getNombre() != "Banca"){
+		do{
+			decirPuntuacion(indice);
+			std::cout << "Desea coger más cartas?\n 1) Si.\n 2) No.\n";
+			std::cin >> decision;
+		}while(decision < 1 || decision > 2);
+	}
+	else{
+		decirPuntuacion(indice);
+		decision = decisionBanca();
+	}
+	if(decision == 1){
+		return true;
+	}
+	else{
+		return false;
 	}
 }
 
@@ -35,27 +45,6 @@ void Juego::decirPuntuacion(int indice){
 	else{
 		std::cout << listaDeJugadores[indice].getNombre() <<
 			", tienes: " << listaDeJugadores[indice].getValor() << " Puntos.\n";
-	}
-}
-
-void Juego::elegirGanador(){
-	int mayor = 0;
-	for(int i = 0; i < numeroJugadores; i++){
-		int valorJugador = listaDeJugadores[i].getValor();
-		if(valorJugador <= 21){
-			if(i == 0){
-				mayor = valorJugador;
-			}
-			else if(listaDeJugadores[i].getValor() > mayor){
-				mayor = valorJugador;
-			}
-		}
-	}
-	for(int i = 0; i < numeroJugadores; i++){
-		int valorJugador = listaDeJugadores[i].getValor();
-		if(valorJugador == mayor){
-			listaDeJugadores[i].ganar();
-		}
 	}
 }
 
@@ -98,59 +87,7 @@ void Juego::definirJugadores(){
 	numeroJugadores++;
 }
 
-bool Juego::continuar(int indice){
-	int decision = 0;
-	if(listaDeJugadores[indice].getNombre() != "Banca"){
-		do{
-			decirPuntuacion(indice);
-			std::cout << "Desea coger más cartas?\n 1) Si.\n 2) No.\n";
-			std::cin >> decision;
-		}while(decision < 1 || decision > 2);
-	}
-	else{
-		decirPuntuacion(indice);
-		decision = decisionBanca();
-	}
-	if(decision == 1){
-		return true;
-	}
-	else{
-		return false;
-	}
-}
-
-int Juego::numeroDeGanadores(){
-	int Ganadores = 0;
-	for (int i = 0; i < numeroJugadores; i++){
-		if(listaDeJugadores[i].getGanador()){
-			Ganadores++;
-		}
-	}
-	return Ganadores;
-}
-
-void Juego::devolverGanadores(){
-	elegirGanador();
-	int numGanadores = numeroDeGanadores();
-	if(numGanadores == 0){
-		std::cout << "No ha ganado nadie.";
-	}
-	else if (numGanadores == 1){
-		std::cout << "El ganador es: \n";
-	}
-	else{
-		std::cout << "Los ganadores son: \n";
-	}
-	for (int i = 0; i < numeroJugadores; i++){
-		if(listaDeJugadores[i].getGanador()){
-			std::cout << listaDeJugadores[i].getNombre() << std::endl;
-			listaDeJugadores[i].sumarVictoria();
-		}
-	}
-}
-
 void Juego::desarrolloDeLaRonda(){
-
 	srand((unsigned) time(0));
 	for (int j = 0; j < 100; j++){
 		std::cout << std::endl;
@@ -174,6 +111,47 @@ void Juego::desarrolloDeLaRonda(){
 	}
 }
 
+void Juego::devolverGanadores(){
+	elegirGanador();
+	int numGanadores = numeroDeGanadores();
+	if(numGanadores == 0){
+		std::cout << "No ha ganado nadie.";
+	}
+	else if (numGanadores == 1){
+		std::cout << "El ganador es: \n";
+	}
+	else{
+		std::cout << "Los ganadores son: \n";
+	}
+	for (int i = 0; i < numeroJugadores; i++){
+		if(listaDeJugadores[i].getGanador()){
+			std::cout << listaDeJugadores[i].getNombre() << std::endl;
+			listaDeJugadores[i].sumarVictoria();
+		}
+	}
+}
+
+void Juego::elegirGanador(){
+	int mayor = 0;
+	for(int i = 0; i < numeroJugadores; i++){
+		int valorJugador = listaDeJugadores[i].getValor();
+		if(valorJugador <= 21){
+			if(i == 0){
+				mayor = valorJugador;
+			}
+			else if(listaDeJugadores[i].getValor() > mayor){
+				mayor = valorJugador;
+			}
+		}
+	}
+	for(int i = 0; i < numeroJugadores; i++){
+		int valorJugador = listaDeJugadores[i].getValor();
+		if(valorJugador == mayor){
+			listaDeJugadores[i].ganar();
+		}
+	}
+}
+
 bool Juego::finalizarPartida(){
 	int aux = 0;
 	bool terminar = false;
@@ -190,9 +168,11 @@ bool Juego::finalizarPartida(){
 	return terminar;
 }
 
-int Juego::sacarCarta(){
-	int carta = (rand() % baraja.getUtilizadas());
-	return carta;
+void Juego::iniciarRonda(){
+	terminado = false;
+	for (int i = 0; i < numeroJugadores; i++){
+		listaDeJugadores[i].jugar();
+	}
 }
 
 bool Juego::jugada(int i){
@@ -216,4 +196,23 @@ bool Juego::jugada(int i){
 	else{
 		return false;
 	}
+}
+
+int Juego::numeroDeGanadores(){
+	int Ganadores = 0;
+	for (int i = 0; i < numeroJugadores; i++){
+		if(listaDeJugadores[i].getGanador()){
+			Ganadores++;
+		}
+	}
+	return Ganadores;
+}
+
+int Juego::sacarCarta(){
+	int carta = (rand() % baraja.getUtilizadas());
+	return carta;
+}
+
+void Juego::Terminar(){
+	terminado = true;
 }

@@ -11,18 +11,17 @@ class Baraja{
 
 		Baraja();
 
-		void rellenar();
-
 		Carta getCarta(int indice);
 
 		int getUtilizadas();
 
-		void eliminarCarta(int indice);
+		void cartaUsada(int indice);
 
 		void cartaVacia(int indice);
 
-		void cartaUsada(int indice);
+		void eliminarCarta(int indice);
 
+		void rellenar();
 };
 
 #endif

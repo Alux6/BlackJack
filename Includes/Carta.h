@@ -5,21 +5,20 @@
 
 class Carta{
 	private:
-		int valor;
-		int cantidad;
 		std::string NombreCarta;
-
+		int cantidad;
+		int valor;
 
 	public:
 		Carta();
 
 		Carta(int Valor, std::string nombre);
 
-		std::string getNombre();
+		int getCantidad();
 
 		int getValor();
 
-		int getCantidad();
+		std::string getNombre();
 
 		void usarCarta();
 };

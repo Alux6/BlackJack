@@ -1,20 +1,17 @@
-
 #include <iostream>
 #ifndef _JUGADORH_
 #define _JUGADORH_
 
 class Jugador{
 	private:
-		int victorias;
-		int valorTotal;
-		bool jugando;
 		bool ganador;
+		bool jugando;
 		std::string Nombre;
+		int valorTotal;
+		int victorias;
 
 	public:
 		Jugador();
-
-		void setNombre(std::string nombre);
 
 		std::string getNombre();
 
@@ -26,15 +23,17 @@ class Jugador{
 
 		bool getGanador();
 
+		void setNombre(std::string nombre);
+
 		void ganar();
 
 		void jugar();
 
-		void terminarRonda();
-
 		void sumarValor(int valor);
 
 		void sumarVictoria();
+
+		void terminarRonda();
 };
 
 #endif

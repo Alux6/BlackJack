@@ -5,12 +5,12 @@
 
 class Juego{
 	private:
-		bool terminado;
-		int rondas = 0;
 		static const int TAM = 12;
-		int numeroJugadores;
 		Baraja baraja;
 		Jugador listaDeJugadores[TAM];
+		int numeroJugadores;
+		int rondas = 0;
+		bool terminado;
 
 	public:
 		Juego();
@@ -21,31 +21,31 @@ class Juego{
 
 		bool getTerminado();
 
-		void Terminar();
-
-		void iniciarRonda();
+		bool continuar(int indice);
 
 		void decirPuntuacion(int indice);
 
-		void elegirGanador();
-
-		void devolverGanadores();
+		int decisionBanca();
 
 		void definirJugadores();
 
 		void desarrolloDeLaRonda();
 
+		void devolverGanadores();
+
+		void elegirGanador();
+
 		bool finalizarPartida();
 
-		bool continuar(int indice);
+		void iniciarRonda();
 
 		bool jugada(int i);
 
 		int numeroDeGanadores();
 
-		int decisionBanca();
-
 		int sacarCarta();
+
+		void Terminar();
 };
 
 #endif

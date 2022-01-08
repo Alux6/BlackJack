@@ -38,10 +38,6 @@ void Jugador::jugar(){
 	valorTotal = 0;
 }
 
-void Jugador::terminarRonda(){
-	jugando = false;
-}
-
 void Jugador::sumarValor(int valor){
 	valorTotal += valor;
 	if(valorTotal >= 21){
@@ -51,4 +47,8 @@ void Jugador::sumarValor(int valor){
 
 void Jugador::sumarVictoria(){
 	victorias++;
+}
+
+void Jugador::terminarRonda(){
+	jugando = false;
 }
