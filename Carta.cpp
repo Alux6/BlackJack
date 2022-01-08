@@ -1,4 +1,4 @@
-#include "Carta.h"
+#include "./Includes/Carta.h"
 
 
 Carta::Carta(){

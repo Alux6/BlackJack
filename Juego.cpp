@@ -1,7 +1,7 @@
-#include "Juego.h"
-#include "Jugador.h"
-#include "Baraja.h"
-#include "Carta.h"
+#include "./Includes/Juego.h"
+#include "./Includes/Jugador.h"
+#include "./Includes/Baraja.h"
+#include "./Includes/Carta.h"
 Juego::Juego(){
 }
 
@@ -91,8 +91,6 @@ void Juego::definirJugadores(){
 		std::cout << "Introduzca el nombre del jugador " << i + 1 << std::endl;
 		std::cin >> nombre;
 		listaDeJugadores[i].setNombre(nombre);
-		for (int i = 0; i < numeroJugadores; i++){
-		}
 	}
 	listaDeJugadores[numeroJugadores] = banca;
 	listaDeJugadores[numeroJugadores].setNombre("Banca");

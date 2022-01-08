@@ -1,6 +1,6 @@
 
 #include <cstdlib>
-#include "Juego.h"
+#include "./Includes/Juego.h"
 using namespace std;
 
 int main(){

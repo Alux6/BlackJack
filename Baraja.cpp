@@ -1,4 +1,4 @@
-#include "Baraja.h"
+#include "./Includes/Baraja.h"
 
 Baraja::Baraja(){
 	rellenar();

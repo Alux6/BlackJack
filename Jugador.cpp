@@ -1,4 +1,4 @@
-#include "Jugador.h"
+#include "./Includes/Jugador.h"
 
 Jugador::Jugador(){
 	victorias = 0;
