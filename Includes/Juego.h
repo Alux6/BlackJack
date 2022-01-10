@@ -17,10 +17,6 @@ class Juego{
 
 		Jugador getJugador(int indice);
 
-		int getNumeroJugadores();
-
-		bool getTerminado();
-
 		bool continuar(int indice);
 
 		void decirPuntuacion(int indice);
@@ -44,8 +40,6 @@ class Juego{
 		int numeroDeGanadores();
 
 		int sacarCarta();
-
-		void Terminar();
 };
 
 #endif

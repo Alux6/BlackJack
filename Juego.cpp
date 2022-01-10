@@ -9,14 +9,6 @@ Jugador Juego::getJugador(int indice){
 	return listaDeJugadores[indice];
 }
 
-int Juego::getNumeroJugadores(){
-	return numeroJugadores;
-}
-
-bool Juego::getTerminado(){
-	return terminado;
-}
-
 bool Juego::continuar(int indice){
 	int decision = 0;
 	if(listaDeJugadores[indice].getNombre() != "Banca"){
@@ -92,21 +84,21 @@ void Juego::desarrolloDeLaRonda(){
 	for (int j = 0; j < 100; j++){
 		std::cout << std::endl;
 	}
-	for(int i = 0; i < getNumeroJugadores(); i++){
+	for(int i = 0; i < numeroJugadores; i++){
 			std::cout << getJugador(i).getNombre() << ": " <<
 			getJugador(i).getVictorias() << " Victorias.\n";
 	}
-	while(!getTerminado()){
+	while(!terminado){
 		int jugadas = 0;
 		bool jugando = false;
-		for (int i = 0; i < getNumeroJugadores(); i++){
+		for (int i = 0; i < numeroJugadores; i++){
 			jugando = jugada(i);
 			if(jugando){
 				jugadas++;
 			}
 		}
 		if(jugadas == 0){
-			Terminar();
+			terminado = true;
 		}
 	}
 }
@@ -211,8 +203,4 @@ int Juego::numeroDeGanadores(){
 int Juego::sacarCarta(){
 	int carta = (rand() % baraja.getUtilizadas());
 	return carta;
-}
-
-void Juego::Terminar(){
-	terminado = true;
 }
